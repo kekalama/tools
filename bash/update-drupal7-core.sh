@@ -73,25 +73,33 @@ COREFILES=("authorize.php"
 printf "\nStarted to update Drupal 7 core files...\n"
 
 # Preparation phase
-rm -rf $BACKUPDIR/*
-printf "...removed content from the backup directory\n"
+if rm -rf $BACKUPDIR/* ; then
+    
+    printf "...removed content from the backup directory\n"
 
-# 1. Create backup of current installation
-cp -r $CURRENTDIR/* $BACKUPDIR/
-printf "...successfully created backup\n"
+    # 1. Create backup of current installation
+    if cp -r $CURRENTDIR/* $BACKUPDIR/ ; then
+	printf "...successfully created backup\n"
 
-# 2. Remove current installation core files
-for item in "${COREFILES[@]}"
-do
-    rm -rf $CURRENTDIR/"${item}"
-done
-printf "...successfully removed old core files\n"
+	# 2. Remove current installation core files
+	for item in "${COREFILES[@]}"
+	do
+	    rm -rf $CURRENTDIR/"${item}"
+	done
+	printf "...successfully removed old core files\n"
 
-# 3. Copy new files from new package
-for item in "${COREFILES[@]}"
-do
-    cp -r $NEWDRUPALDIR/"${item}" $CURRENTDIR/
-done
-printf "...successfully copied new core files to current installation directory\n"
+	# 3. Copy new files from new package
+	for item in "${COREFILES[@]}"
+	do
+	    cp -r $NEWDRUPALDIR/"${item}" $CURRENTDIR/
+	done
+	printf "...successfully copied new core files to current installation directory\n"
 
-printf "Updated successfully Drupal 7 core files!\n"
+	printf "Updated successfully Drupal 7 core files!\n"
+
+    else
+	printf "Failed creating backup"
+    fi
+else
+    printf "Failed removing content from the backup directory\n"
+fi
